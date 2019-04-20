@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">グルメサーチ</string>
+    <string name="title_activity_gourmet_search">Map</string>
 </resources>
