@@ -6,7 +6,13 @@ import android.os.Bundle;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import test.engineering.com.gourmetsearch.GourmetSearch.GourmetSearchActivity;
+import test.engineering.com.gourmetsearch.Model.API.APIInterface;
+import test.engineering.com.gourmetsearch.Model.API.APIService;
+import test.engineering.com.gourmetsearch.Model.Response.HotPepperObject;
 import test.engineering.com.gourmetsearch.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,9 +26,32 @@ public class MainActivity extends AppCompatActivity {
 
         initRealm();
 
+        getGenreMaster();
+
         Intent gourmetSearchIntent = new Intent(getApplicationContext(), GourmetSearchActivity.class);
         startActivity(gourmetSearchIntent);
     }
+
+    private void getGenreMaster() {
+        APIInterface apiInterface = APIService.createService(APIInterface.class);
+        Call<HotPepperObject> call = apiInterface.getGenreMaster(
+                getString(R.string.hotpepperApikey),
+                "json"
+        );
+        call.enqueue(new Callback<HotPepperObject>() {
+            @Override
+            public void onResponse(Call<HotPepperObject> call, Response<HotPepperObject> response) {
+                if (response.isSuccessful()) {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HotPepperObject> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void initRealm() {
         Realm.init(this);
         RealmConfiguration configuration  = new RealmConfiguration.Builder()

@@ -2,6 +2,7 @@ package test.engineering.com.gourmetsearch.GourmetSearch;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -44,6 +45,7 @@ import at.wirecube.additiveanimations.additive_animator.AdditiveAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import test.engineering.com.gourmetsearch.GenreSelect.GenreSelectActivity;
 import test.engineering.com.gourmetsearch.Model.API.APIInterface;
 import test.engineering.com.gourmetsearch.Model.API.APIService;
 import test.engineering.com.gourmetsearch.Model.Response.HotPepperObject;
@@ -137,7 +139,8 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
         genreSelectBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: ジャンル選択画面へ遷移
+                Intent intent = new Intent(GourmetSearchActivity.this, GenreSelectActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -352,6 +355,9 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        if (marker.getTitle() == null) {
+            return false;
+        }
         position = marker.getTitle().toCharArray()[0] - 'A';
 
         StoreResponse store = storeList.get(position);

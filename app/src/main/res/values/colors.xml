@@ -11,4 +11,5 @@
     <color name="storeNameColor">#1987E5</color>
     <color name="openColor">#9A9A9A</color>
     <color name="toStoreColor">#FF2600</color>
+    <color name="lightGray">#d9d9d9</color>
 </resources>

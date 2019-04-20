@@ -6,4 +6,6 @@
     <string name="emptyStoreList">現在地周辺に該当店舗はありません。条件を変更してもう一度お試しください。</string>
     <string name="to_minutes">%d分</string>
     <string name="unknownOpen">店舗までお問い合わせください</string>
+    <string name="searchAroundHere">付近で検索</string>
+    <string name="selectGenreHint">ジャンルを選択</string>
 </resources>
