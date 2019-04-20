@@ -3,6 +3,9 @@ package test.engineering.com.gourmetsearch.Launch;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -12,6 +15,8 @@ import retrofit2.Response;
 import test.engineering.com.gourmetsearch.GourmetSearch.GourmetSearchActivity;
 import test.engineering.com.gourmetsearch.Model.API.APIInterface;
 import test.engineering.com.gourmetsearch.Model.API.APIService;
+import test.engineering.com.gourmetsearch.Model.Dao.GenreEntityDao;
+import test.engineering.com.gourmetsearch.Model.Response.GenreResponse;
 import test.engineering.com.gourmetsearch.Model.Response.HotPepperObject;
 import test.engineering.com.gourmetsearch.R;
 
@@ -27,9 +32,6 @@ public class MainActivity extends AppCompatActivity {
         initRealm();
 
         getGenreMaster();
-
-        Intent gourmetSearchIntent = new Intent(getApplicationContext(), GourmetSearchActivity.class);
-        startActivity(gourmetSearchIntent);
     }
 
     private void getGenreMaster() {
@@ -42,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<HotPepperObject> call, Response<HotPepperObject> response) {
                 if (response.isSuccessful()) {
+                    List<GenreResponse> genreResponseList = response.body().getResults().getGenre();
+                    GenreEntityDao.getInstance().add(genreResponseList, true);
+                    Log.d("GenreMaster", String.valueOf(genreResponseList));
+
+                    Intent gourmetSearchIntent = new Intent(getApplicationContext(), GourmetSearchActivity.class);
+                    startActivity(gourmetSearchIntent);
                 }
             }
 

@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -45,6 +46,7 @@ import at.wirecube.additiveanimations.additive_animator.AdditiveAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import test.engineering.com.gourmetsearch.Entities.GenreEntity;
 import test.engineering.com.gourmetsearch.GenreSelect.GenreSelectActivity;
 import test.engineering.com.gourmetsearch.Model.API.APIInterface;
 import test.engineering.com.gourmetsearch.Model.API.APIService;
@@ -57,6 +59,8 @@ import test.engineering.com.gourmetsearch.Util.NetworkStateReceiver;
 
 public class GourmetSearchActivity extends FragmentActivity implements OnMapReadyCallback, NetworkStateReceiver.NetworkStateReceiverListener, GoogleMap.OnMarkerClickListener {
     public static final int LOCATION_REQUEST = 111;
+    public static final int GENRE_SELECT = 222;
+    public static final String GENRE = "GENRE";
 
     private NetworkStateReceiver networkStateReceiver;
     private GoogleMap mMap;
@@ -83,7 +87,9 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
     private TextView minToGoTextView;
 
     private Point point;
-    int position;
+    private int position;
+
+    private GenreEntity selectedGenre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +146,7 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GourmetSearchActivity.this, GenreSelectActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, GENRE_SELECT);
             }
         });
 
@@ -290,7 +296,7 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
         APIInterface apiInterface = APIService.createService(APIInterface.class);
         Call<HotPepperObject> call = apiInterface.getOptionsHotPepperObjectNew(
                 getString(R.string.hotpepperApikey),
-                "",
+                selectedGenre == null ? "" : selectedGenre.getCode(),
                 "json",
                 position.latitude,
                 position.longitude,
@@ -300,7 +306,8 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
             @Override
             public void onResponse(Call<HotPepperObject> call, Response<HotPepperObject> response) {
                 if (response.isSuccessful()) {
-                    storeList = response.body().getResults().getShop();
+                    storeList.clear();
+                    storeList.addAll(response.body().getResults().getShop());
                     receivedStoreDataList();
                 }
             }
@@ -313,11 +320,12 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
     }
 
     private void receivedStoreDataList() {
+        resetStoreMarkerList();
         if (storeList.isEmpty()) {
-            Toast.makeText(getApplicationContext(), R.string.emptyStoreList, Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(), R.string.emptyStoreList, Toast.LENGTH_LONG)
+                    .show();
             return;
         }
-        resetStoreMarkerList();
         for (int position = 0; position < storeList.size(); position++) {
             StoreResponse store = storeList.get(position);
             LatLng location = new LatLng(store.getLat(), store.getLng());
@@ -375,5 +383,19 @@ public class GourmetSearchActivity extends FragmentActivity implements OnMapRead
         minToGoTextView.setText(getResources().getString(R.string.to_minutes, Math.round(distance / 80.0f)));
         storeDetailConstraintLayout.setVisibility(View.VISIBLE);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GENRE_SELECT) {
+            if (data == null) {
+                selectedGenre = null;
+                return;
+            }
+            selectedGenre = (GenreEntity) data.getSerializableExtra(GENRE);
+            genreNameTextView.setText(selectedGenre.getName());
+            getStoreInfo();
+        }
     }
 }
