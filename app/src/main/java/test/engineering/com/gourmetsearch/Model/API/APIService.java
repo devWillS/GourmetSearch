@@ -1,6 +1,7 @@
 package test.engineering.com.gourmetsearch.Model.API;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -20,6 +22,7 @@ public class APIService {
 
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
 
     static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -57,18 +60,20 @@ public class APIService {
 
     public static <S> S createService(
             Class<S> serviceClass, final String authToken) {
+        httpClient.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+
         if (!TextUtils.isEmpty(authToken)) {
             AuthenticationInterceptor interceptor =
                     new AuthenticationInterceptor(authToken);
 
             if (!httpClient.interceptors().contains(interceptor)) {
                 httpClient.addInterceptor(interceptor);
-
-                builder.client(httpClient.build());
-                retrofit = builder.build();
             }
         }
 
+        builder.client(httpClient.build());
+        retrofit = builder.build();
+        Log.d("interceptors", String.valueOf(httpClient.interceptors()));
         return retrofit.create(serviceClass);
     }
 }

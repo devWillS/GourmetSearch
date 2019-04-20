@@ -9,7 +9,7 @@ public interface APIInterface {
     @GET("gourmet/v1")
     Call<HotPepperObject> getOptionsHotPepperObjectNew(
             @Query("key") String key,
-            @Query("key") String genre,
+            @Query("genre") String genre,
             @Query("format") String format,
             @Query("lat") double lat,
             @Query("lng") double lng,
