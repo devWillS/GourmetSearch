@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#339966</color>
+    <color name="colorPrimaryDark">#228855</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimaryTransparent">#55339966</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="storeNameColor">#1987E5</color>
+    <color name="openColor">#9A9A9A</color>
+    <color name="toStoreColor">#FF2600</color>
+</resources>

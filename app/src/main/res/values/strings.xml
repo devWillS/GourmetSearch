@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">グルメサーチ</string>
+    <string name="title_activity_gourmet_search">Map</string>
+    <string name="hotpepperApikey">65d8725723ef2c21</string>
+
+    <string name="emptyStoreList">現在地周辺に該当店舗はありません。条件を変更してもう一度お試しください。</string>
+    <string name="to_minutes">%d分</string>
+    <string name="unknownOpen">店舗までお問い合わせください</string>
+</resources>
