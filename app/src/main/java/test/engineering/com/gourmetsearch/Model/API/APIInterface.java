@@ -15,4 +15,10 @@ public interface APIInterface {
             @Query("lng") double lng,
             @Query("count") int count
     );
+
+    @GET("genre/v1")
+    Call<HotPepperObject> getGenreMaster(
+            @Query("key") String key,
+            @Query("format") String format
+    );
 }

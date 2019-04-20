@@ -39,7 +39,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:ellipsize="end"
-                android:hint="ジャンルを選択"
+                android:hint="@string/selectGenreHint"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
